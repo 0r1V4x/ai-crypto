@@ -1,0 +1,7 @@
+body { font-family:Arial; background:#0f172a; color:#e5e7eb }
+table { width:100%; border-collapse:collapse }
+th,td { padding:10px; border-bottom:1px solid #334155; text-align:center }
+.BUY{color:#22c55e;font-weight:bold}
+.SELL{color:#ef4444;font-weight:bold}
+.HOLD{color:#eab308;font-weight:bold}
+button{padding:6px 12px}
