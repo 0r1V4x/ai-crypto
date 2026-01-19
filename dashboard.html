@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Crypto Trader</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<h2>🚀 Welcome {{user}}</h2>
+
+<form action="/update" method="post">
+<input type="hidden" name="user" value="{{user}}">
+Balance: <input name="balance">
+Risk %: <input name="risk">
+<button>Update</button>
+</form>
+
+<table id="signals"></table>
+
+<div id="tv"></div>
+
+<script>
+async function loadSignals(){
+  const r = await fetch(`/signals?user={{user}}`);
+  const data = await r.json();
+  let html = "<tr><th>Symbol</th><th>Price</th><th>RSI</th><th>Signal</th><th>Confidence</th><th>Trade</th></tr>";
+  data.forEach(s=>{
+    html+=`<tr>
+<td>${s.symbol}</td>
+<td>${s.price}</td>
+<td>${s.rsi}</td>
+<td class="${s.signal}">${s.signal}</td>
+<td>${s.confidence}%</td>
+<td><button onclick="trade('${s.symbol}','${s.signal}')">Auto-Trade</button></td>
+</tr>`;
+  });
+  document.getElementById("signals").innerHTML=html;
+}
+setInterval(loadSignals,1000);
+
+function trade(symbol,signal){
+  fetch("/autotrade",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+  body:`user={{user}}&symbol=${symbol}&signal=${signal}`}).then(r=>r.json()).then(alert);
+}
+</script>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+new TradingView.widget({
+  container_id: "tv",
+  symbol: "BINANCE:BTCUSDT",
+  interval: "5",
+  theme: "dark",
+  style: "1",
+  locale: "en"
+});
+</script>
+
+</body>
+</html>
